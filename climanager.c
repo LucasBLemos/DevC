@@ -6,9 +6,19 @@
 #include <conio.h>
 #include <locale.h>
 #include <time.h>
-#include <Windows.h>
+#ifdef _WIN32 
 
-/*01 - Estrutura do endereÁo*/
+#include <Windows.h>
+// Outros includes 
+
+#else
+
+// D√° mensagem de erro informando que o sistemas n√£o √© suportado.
+#error "Sistema nao suportado."
+
+#endif
+
+/*01 - Estrutura do endere√ßo*/
 typedef struct
 {
 	char logradouro[15];
@@ -24,12 +34,12 @@ typedef struct
 {
 	int codigo;
 	char nome[50];
-	char descriÁ„o[100];
+	char descri√ß√£o[100];
 	char cnpj[14];
 	address endereco;
 }branch;
 
-/*03 - Estrutura do usu·rio*/
+/*03 - Estrutura do usu√°rio*/
 typedef struct
 {
 	int codigo;
@@ -83,7 +93,7 @@ typedef struct
 
 FILE* puser, * ppatient, * pdoctor, * pfilial, * pendereco, * plogin;
 
-/*MÈtodos do programa*/
+/*M√©todos do programa*/
 char menu_principal();
 char menu_cadastros();
 char menu_consultas();
@@ -105,7 +115,7 @@ void limpabuffer(void);
 /*MENU PRINCIPAL*/
 char menu_principal()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 	system("cls");
 
 	printf("	        ========   CLIMANAGER   ========\n\n");
@@ -122,14 +132,14 @@ char menu_principal()
 	printf("    |                                                    |\n");
 	printf("    |____________________________________________________|\n");
 
-	printf("\nFavor selecionar alguma opÁ„o: \n\n");
+	printf("\nFavor selecionar alguma op√ß√£o: \n\n");
 
 	return _getch();
 }
 
 char menu_cadastros()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 	system("cls");
 
 	printf("	        ========   CLIMANAGER   ========\n\n");
@@ -140,9 +150,9 @@ char menu_cadastros()
 	printf("    |____________________________________________________|\n");
 	printf("    |                                                    |\n");
 	printf("    |                                                    |\n");
-	printf("    |       [1] - Cadastros usu·rios                     |\n");
+	printf("    |       [1] - Cadastros usu√°rios                     |\n");
 	printf("    |       [2] - Cadastrar pacientes                    |\n");
-	printf("    |       [3] - Cadastrar mÈdicos                      |\n");
+	printf("    |       [3] - Cadastrar m√©dicos                      |\n");
 	printf("    |       [4] - Cadastrar filial                       |\n");
 	printf("    |       [5] - Cadastrar agendamentos                 |\n");
 	printf("    |       [6] - Voltar ao menu principal               |\n");
@@ -150,14 +160,14 @@ char menu_cadastros()
 	printf("    |                                                    |\n");
 	printf("    |____________________________________________________|\n");
 
-	printf("\nFavor selecionar alguma opÁ„o: \n\n");
+	printf("\nFavor selecionar alguma op√ß√£o: \n\n");
 
 	return getchar();
 }
 
 char menu_consultas()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 	system("cls");
 
 	printf("	        ========   CLIMANAGER   ========\n\n");
@@ -168,9 +178,9 @@ char menu_consultas()
 	printf("    |____________________________________________________|\n");
 	printf("    |                                                    |\n");
 	printf("    |                                                    |\n");
-	printf("    |       [1] - Consultar usu·rios                     |\n");
+	printf("    |       [1] - Consultar usu√°rios                     |\n");
 	printf("    |       [2] - Consultar pacientes                    |\n");
-	printf("    |       [3] - Consultar mÈdicos                      |\n");
+	printf("    |       [3] - Consultar m√©dicos                      |\n");
 	printf("    |       [4] - Consultar filial                       |\n");
 	printf("    |       [5] - Consultar agendamentos                 |\n");
 	printf("    |       [6] - Voltar ao menu principal               |\n");
@@ -178,7 +188,7 @@ char menu_consultas()
 	printf("    |                                                    |\n");
 	printf("    |____________________________________________________|\n");
 
-	printf("\nFavor selecionar alguma opÁ„o: \n\n");
+	printf("\nFavor selecionar alguma op√ß√£o: \n\n");
 
 	return getchar();
 }
@@ -186,20 +196,20 @@ char menu_consultas()
 /*MAIN COM SWITCH*/
 void main()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 	char str1[50] = "str";
 	char str2[50] = "str2";
 	int i, k, g, tam3 = 0;;
 	char a[50];
 	char crip_msg[50];
 	int tam_msg;
-	user cususario;
+	user cusuario;
 
 volta:
 
 	k = 0; g = 0;
 
-	/* CADASTRO DO USU¡RIO PADR√O*/
+	/* CADASTRO DO USU√ÅRIO PADR√ÉO*/
 	char const* buscar = "adminstrador";
 	char buscar2[50];
 
@@ -230,29 +240,29 @@ volta:
 
 	printf("\n============ PAINEL DE LOGIN ============\n\n");
 
-	printf("\nFavor digitar o seu usu·rio e senha!\n");
+	printf("\nFavor digitar o seu usu√°rio e senha!\n");
 	printf("\nLOGIN: ");
-	gets(cususario.usuario);
+	gets(cusuario.usuario);
 	printf("\nSENHA: ");
 
 
 	/*ADICIONANDO MASCARA NA SENHA*/
 	//do
 	//{
-	//	cususario.senha[tam3] = _getch();
-	//	if (cususario.senha[tam3] == 0x08 && tam3 > 0)  //Backspace
+	//	cusuario.senha[tam3] = _getch();
+	//	if (cusuario.senha[tam3] == 0x08 && tam3 > 0)  //Backspace
 	//	{
 	//		printf("\b \b");
-	//		cususario.senha[tam3] = 0x00;
+	//		cusuario.senha[tam3] = 0x00;
 	//		tam3--;
 
 	//	}
-	//	else if (cususario.senha[tam3] == 13) // Enter
+	//	else if (cusuario.senha[tam3] == 13) // Enter
 	//	{
-	//		cususario.senha[tam3] = 0x00;
+	//		cusuario.senha[tam3] = 0x00;
 	//		break;
 	//	}
-	//	else if (cususario.senha[tam3] != 0x08)
+	//	else if (cusuario.senha[tam3] != 0x08)
 	//	{
 	//		putchar('*');
 	//		tam3++;
@@ -268,31 +278,31 @@ volta:
 
 		if (isprint(c))
 		{
-			cususario.senha[pos++] = c;
+			cusuario.senha[pos++] = c;
 			printf("%c", '*');
 		}
 		else if (c == 8 && pos)
 		{
-			cususario.senha[pos--] = '\0';
+			cusuario.senha[pos--] = '\0';
 			printf("%s", "\b \b");
 		}
 	} while (c != 13);
 
-	/*REALIZA A BUSCA NO ARQUIVO DO USU¡RIO E SENHA, A SENHA ELE COMPARA O VALOR DIGITADO CRIPTOGRAFADO
-	COM O VALOR CRIPTOGRAFADO QUE EST¡ NO ARQUIVO*/
+	/*REALIZA A BUSCA NO ARQUIVO DO USU√ÅRIO E SENHA, A SENHA ELE COMPARA O VALOR DIGITADO CRIPTOGRAFADO
+	COM O VALOR CRIPTOGRAFADO QUE EST√Å NO ARQUIVO*/
 
 	while (fscanf(puser, "%s", a) != EOF) {
-		if (strcmp(a, cususario.usuario) == 0) {
+		if (strcmp(a, cusuario.usuario) == 0) {
 
 			g = 1;
 			break;
 		}
 	}
 
-	tam_msg = strlen(cususario.senha);
+	tam_msg = strlen(cusuario.senha);
 	for (i = 0; i < tam_msg; i++)
 	{
-		crip_msg[i] = cususario.senha[i] + 5;
+		crip_msg[i] = cusuario.senha[i] + 5;
 	}
 
 	while (fscanf(puser, "%s", a) != EOF) {
@@ -306,7 +316,7 @@ volta:
 		printf("\n\nLOGADO");
 	}
 	else {
-		printf("\n\nUsu·rio ou senha inv·lido!\n\n");
+		printf("\n\nUsu√°rio ou senha inv√°lido!\n\n");
 		//(void)getchar();
 		//(void)getchar();
 		goto volta;
@@ -377,10 +387,10 @@ fim:
 	;
 }
 
-/*SE«√O USU¡RIOS*/
+/*SE√á√ÉO USU√ÅRIOS*/
 void cad_usuario()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 
 	system("mkdir dados");
 	puser = fopen("dados\\cad_funcionario.txt", "a");
@@ -392,7 +402,7 @@ void cad_usuario()
 	memset(cfuncionario.senha, 0x00, sizeof(cfuncionario.senha));
 	memset(cfuncionario.senha2, 0x00, sizeof(cfuncionario.senha2));
 
-	/*Buscar ˙ltimo cÛdigo cadastrado*/
+	/*Buscar √∫ltimo c√≥digo cadastrado*/
 
 	/*Cadastro dos dados*/
 	printf("\033[2J\033[1;1H");
@@ -414,7 +424,7 @@ void cad_usuario()
 	printf("\n\nCPF do funcionario: \n");
 	gets(cfuncionario.cpf);
 
-	printf("\n\nUsu·rio para funcionario: \n");
+	printf("\n\nUsu√°rio para funcionario: \n");
 	gets(cfuncionario.usuario);
 
 	/* ---------- TRATAMENTO NO CAMPO SENHA ---------- */
@@ -424,7 +434,7 @@ inicio:
 	tam = 0;
 	tam2 = 0;
 
-	printf("\n\nSenha do usu·rio: \n");
+	printf("\n\nSenha do usu√°rio: \n");
 	fflush(stdin);
 
 	do
@@ -479,12 +489,12 @@ inicio:
 
 	if (strcmp(cfuncionario.senha, cfuncionario.senha2) != 0)
 	{
-		printf("\nAs senhas n„o conferem!\n\n");
+		printf("\nAs senhas n√£o conferem!\n\n");
 		goto inicio;
 	}
 	else
 	{
-		printf("\n\n--------- LocalizaÁ„o --------- \n\n");
+		printf("\n\n--------- Localiza√ß√£o --------- \n\n");
 
 		printf("\n\nEstado da Usuario: \n");
 		gets(cfuncionario.endereco.estado);
@@ -504,7 +514,7 @@ inicio:
 		printf("\n\nCEP da Usuario: \n");
 		gets(cfuncionario.endereco.cep);
 
-		printf("\n\nUsu·rio cadastrado com sucessso!");
+		printf("\n\nUsu√°rio cadastrado com sucessso!");
 		goto fim;
 	}
 
@@ -528,7 +538,7 @@ fim:
 		crip_msg[i] = cfuncionario.senha[i] + 5;
 	}
 	crip_msg[tam_msg] = '\0';
-	/*Incrementar mais um valor no cÛdigo usu·rio*/
+	/*Incrementar mais um valor no c√≥digo usu√°rio*/
 	fprintf(puser, "Codigo: %i \n", cfuncionario.codigo);
 	fprintf(puser, "Nome: %s \n", cfuncionario.nome);
 	fprintf(puser, "Telefone: %s \n", cfuncionario.telefone);
@@ -536,7 +546,7 @@ fim:
 	fprintf(puser, "CPF: %s \n", cfuncionario.cpf);
 	fprintf(puser, "Usuario: %s \n", cfuncionario.usuario);
 	fprintf(puser, "Senha: %s \n\n", crip_msg);
-	fprintf(puser, "-------- EndereÁo --------\n\n");
+	fprintf(puser, "-------- Endere√ßo --------\n\n");
 	fprintf(puser, "Estado: %s\n", cfuncionario.endereco.estado);
 	fprintf(puser, "Cidade: %s\n", cfuncionario.endereco.cidade);
 	fprintf(puser, "Bairro: %s\n", cfuncionario.endereco.bairro);
@@ -550,7 +560,7 @@ fim:
 
 void con_usuario()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 
 	int i;
 	char tsaida[50], car;
@@ -562,7 +572,7 @@ void con_usuario()
 		perror("dados\\cad_funcionario.txt");
 		return 1;
 	}
-	printf("Usu·rios:\n\n");
+	printf("Usu√°rios:\n\n");
 
 	i = 0;
 	car = fgetc(puser);
@@ -582,10 +592,10 @@ void con_usuario()
 
 }
 
-/*SE«√O PACIENTES*/
+/*SE√á√ÉO PACIENTES*/
 void cad_paciente()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 
 	/*Ponteiros do metodo*/
 	system("mkdir dados");
@@ -612,7 +622,7 @@ void cad_paciente()
 	printf("\n\nCPF do paciente: \n");
 	gets(cpaciente.cpf);
 
-	printf("\n\n--------- LocalizaÁ„o --------- \n\n");
+	printf("\n\n--------- Localiza√ß√£o --------- \n\n");
 
 	printf("\n\nEstado do paciente: \n");
 	gets(cpaciente.endereco.estado);
@@ -642,13 +652,13 @@ void cad_paciente()
 	fprintf(ppatient, "Data/Hora: %s\n", dataehora);
 	fprintf(ppatient, "\n");
 
-	/*Incrementar mais um valor no cÛdigo usu·rio*/
-	fprintf(ppatient, "CÛdigo: %i \n", cpaciente.codigo);
+	/*Incrementar mais um valor no c√≥digo usu√°rio*/
+	fprintf(ppatient, "C√≥digo: %i \n", cpaciente.codigo);
 	fprintf(ppatient, "Nome: %s \n", cpaciente.nome);
 	fprintf(ppatient, "Telefone: %s\n", cpaciente.telefone);
 	fprintf(ppatient, "E-mail: %s\n", cpaciente.email);
 	fprintf(ppatient, "CPF: %s\n\n", cpaciente.cpf);
-	fprintf(ppatient, "-------- EndereÁo --------\n\n");
+	fprintf(ppatient, "-------- Endere√ßo --------\n\n");
 	fprintf(ppatient, "Estado: %s\n", cpaciente.endereco.estado);
 	fprintf(ppatient, "Cidade: %s\n", cpaciente.endereco.cidade);
 	fprintf(ppatient, "Bairro: %s\n", cpaciente.endereco.bairro);
@@ -665,10 +675,10 @@ void con_paciente()
 	printf("teste");
 }
 
-/*SE«√O MEDICOS*/
+/*SE√á√ÉO MEDICOS*/
 void cad_medico()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 
 	/*Ponteiros do metodo*/
 	system("mkdir dados");
@@ -715,7 +725,7 @@ void cad_medico()
 	fprintf(pdoctor, "CPF: %s\n", cmedico.cpf);
 	fprintf(pdoctor, "Especialidade: %s\n\n", cmedico.especialidade);
 
-	fprintf(pdoctor, "-------- EndereÁo --------\n\n");
+	fprintf(pdoctor, "-------- Endere√ßo --------\n\n");
 
 	fprintf(pdoctor, "Estado: %s\n", cmedico.endereco.estado);
 	fprintf(pdoctor, "Cidade: %s\n", cmedico.endereco.cidade);
@@ -733,11 +743,11 @@ void con_medico()
 	printf("teste");
 }
 
-/*SE«√O FILIAL*/
+/*SE√á√ÉO FILIAL*/
 
 void cad_filial()
 {
-	setlocale(LC_ALL, "Portuguese"); //Para acentuaÁ„o
+	setlocale(LC_ALL, "Portuguese"); //Para acentua√ß√£o
 
 	/*Ponteiros do metodo*/
 	system("mkdir dados");
@@ -758,10 +768,10 @@ void cad_filial()
 	printf("\n\nCNPJ da filial: \n");
 	gets(cfilial.cnpj);
 
-	printf("\n\nDescriÁ„o da filial: \n");
-	gets(cfilial.descriÁ„o);
+	printf("\n\nDescri√ß√£o da filial: \n");
+	gets(cfilial.descri√ß√£o);
 
-	printf("\n\n--------- LocalizaÁ„o --------- \n\n");
+	printf("\n\n--------- Localiza√ß√£o --------- \n\n");
 
 	printf("\n\nEstado da filial: \n");
 	gets(cfilial.endereco.estado);
@@ -791,13 +801,13 @@ void cad_filial()
 	fprintf(pfilial, "Data/Hora: %s\n", dataehora);
 	fprintf(pfilial, "\n");
 
-	/*Incrementar mais um valor no cÛdigo usu·rio*/
+	/*Incrementar mais um valor no c√≥digo usu√°rio*/
 	fprintf(pfilial, "Codigo: %i \n", cfilial.codigo);
 	fprintf(pfilial, "Nome: %s \n", cfilial.nome);
 	fprintf(pfilial, "Cnpj: %s\n", cfilial.cnpj);
-	fprintf(pfilial, "DescriÁ„o: %s\n\n", cfilial.descriÁ„o);
+	fprintf(pfilial, "Descri√ß√£o: %s\n\n", cfilial.descri√ß√£o);
 
-	fprintf(pfilial, "-------- EndereÁo --------\n\n");
+	fprintf(pfilial, "-------- Endere√ßo --------\n\n");
 
 	fprintf(pfilial, "Estado: %s\n", cfilial.endereco.estado);
 	fprintf(pfilial, "Cidade: %s\n", cfilial.endereco.cidade);
@@ -815,7 +825,7 @@ void con_filial()
 	printf("teste");
 }
 
-/*SE«√O AGENDAMENTOS*/
+/*SE√á√ÉO AGENDAMENTOS*/
 
 void cad_agendamentos()
 {
@@ -827,7 +837,7 @@ void con_agendamentos()
 	printf("teste");
 }
 
-void limpabuffer(void) // FunÁao utilit·ria para limpar o buffer do teclado
+void limpabuffer(void) // Fun√ßao utilit√°ria para limpar o buffer do teclado
 {
 	int c = 0;
 	while ((c = getchar()) != '\n' && c != EOF) {}
