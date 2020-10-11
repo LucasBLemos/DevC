@@ -109,7 +109,8 @@ void cad_filial();
 void con_filial();
 void cad_agendamentos();
 void con_agendamentos();
-void limpabuffer(void);
+char cad_elogiosereclamacoes();
+
 
 
 /*MENU PRINCIPAL*/
@@ -156,7 +157,6 @@ char menu_cadastros()
 	printf("    |       [4] - Cadastrar filial                       |\n");
 	printf("    |       [5] - Cadastrar agendamentos                 |\n");
 	printf("    |       [6] - Voltar ao menu principal               |\n");
-	printf("    |       [7] - Sair do Programa                       |\n");
 	printf("    |                                                    |\n");
 	printf("    |____________________________________________________|\n");
 
@@ -184,7 +184,6 @@ char menu_consultas()
 	printf("    |       [4] - Consultar filial                       |\n");
 	printf("    |       [5] - Consultar agendamentos                 |\n");
 	printf("    |       [6] - Voltar ao menu principal               |\n");
-	printf("    |       [7] - Sair do Programa                       |\n");
 	printf("    |                                                    |\n");
 	printf("    |____________________________________________________|\n");
 
@@ -203,15 +202,16 @@ void main()
 	char a[50];
 	char crip_msg[50];
 	int tam_msg;
-	user cusuario;
+
 
 volta:
 
 	k = 0; g = 0;
 
 	/* CADASTRO DO USUÁRIO PADRÃO*/
-	char const* buscar = "adminstrador";
-	char buscar2[50];
+	char const* buscar = { NULL };
+	buscar = "administrador";
+	char buscar2[256] = { NULL };
 
 	system("mkdir dados");
 	puser = fopen("dados\\cad_funcionario.txt", "a+");
@@ -220,11 +220,12 @@ volta:
 		perror("dados\\cad_funcionario.txt");
 		return 1;
 	}
-	while (fscanf(puser, "%s", buscar2) || (fscanf(puser, "%s", buscar2) != buscar))
+	while (fscanf(puser, "%s", buscar2) != buscar)
 	{
 		if (strcmp(buscar, buscar2) != 0)
 		{
-			fprintf(puser, "\n --- U: administrador S: firnsnxywfitw ---     \n\n");
+			fprintf(puser, "Usuario: administrador");
+			fprintf(puser, "\nSenha: firnsnxywfitw");
 			fclose(puser);
 			break;
 		}
@@ -234,44 +235,20 @@ volta:
 	}
 
 	/*PAINEL DE LOGIN*/
-
 	puser = fopen("dados\\cad_funcionario.txt", "r");
 	system("cls");
 
-	printf("\n============ PAINEL DE LOGIN ============\n\n");
+	user cusuario = { NULL };
 
+	printf("\n============ PAINEL DE LOGIN ============\n\n");
 	printf("\nFavor digitar o seu usuário e senha!\n");
 	printf("\nLOGIN: ");
 	gets(cusuario.usuario);
 	printf("\nSENHA: ");
 
-
-	/*ADICIONANDO MASCARA NA SENHA*/
-	//do
-	//{
-	//	cusuario.senha[tam3] = _getch();
-	//	if (cusuario.senha[tam3] == 0x08 && tam3 > 0)  //Backspace
-	//	{
-	//		printf("\b \b");
-	//		cusuario.senha[tam3] = 0x00;
-	//		tam3--;
-
-	//	}
-	//	else if (cusuario.senha[tam3] == 13) // Enter
-	//	{
-	//		cusuario.senha[tam3] = 0x00;
-	//		break;
-	//	}
-	//	else if (cusuario.senha[tam3] != 0x08)
-	//	{
-	//		putchar('*');
-	//		tam3++;
-	//	}
-	//} while (tam3 < 13);
-
-	char buffer[256] = { 0 };
 	char c;
 	int pos = 0;
+
 
 	do {
 		c = _getch();
@@ -293,7 +270,6 @@ volta:
 
 	while (fscanf(puser, "%s", a) != EOF) {
 		if (strcmp(a, cusuario.usuario) == 0) {
-
 			g = 1;
 			break;
 		}
@@ -304,6 +280,8 @@ volta:
 	{
 		crip_msg[i] = cusuario.senha[i] + 5;
 	}
+	crip_msg[tam_msg] = '\0';
+
 
 	while (fscanf(puser, "%s", a) != EOF) {
 		if (strcmp(a, crip_msg) == 0) {
@@ -312,12 +290,13 @@ volta:
 		}
 	}
 	fclose(puser);
+
 	if (k == 1 && g == 1) {
 		printf("\n\nLOGADO");
 	}
 	else {
 		printf("\n\nUsuário ou senha inválido!\n\n");
-		//(void)getchar();
+		//setbuf(stdin(NULL);
 		//(void)getchar();
 		goto volta;
 	}
@@ -352,8 +331,7 @@ inicio:
 	case '3': cad_medico(); 		break;
 	case '4': cad_filial(); 		break;
 	case '5': cad_agendamentos(); 	break;
-	case '6': menu_principal();		break;
-	case '7': goto fim;
+	case '6': goto fim;
 		exit(0);
 	}
 
@@ -375,8 +353,7 @@ inicio:
 	case '3': con_medico(); 		break;
 	case '4': con_filial(); 		break;
 	case '5': con_agendamentos(); 	break;
-	case '6': menu_principal();		break;
-	case '7': goto fim;
+	case '6': goto fim;
 		exit(0);
 	}
 
@@ -561,27 +538,21 @@ fim:
 void con_usuario()
 {
 	setlocale(LC_ALL, "Portuguese"); //Para acentuação
-
-	int i;
-	char tsaida[50], car;
-
-	user cusuario;
+	char texto[255];
+	//user cpaciente;
 	puser = fopen("dados\\cad_funcionario.txt", "r");
 
 	if (puser == NULL) {
 		perror("dados\\cad_funcionario.txt");
 		return 1;
 	}
-	printf("Usuários:\n\n");
+	printf("Usuário:\n\n");
 
-	i = 0;
-	car = fgetc(puser);
-	while (car != EOF)
+	while (!feof(puser))
 	{
-		tsaida[i] = car;
-		printf("%c", tsaida[i]);
-		i++;
-		car = fgetc(puser);
+		//função gets lê string, pega do teclado, e fgets, pega do arquivo
+		fgets(texto, 255, puser);
+		printf("%s", texto);
 	}
 
 	fclose(puser);
@@ -589,7 +560,6 @@ void con_usuario()
 	if (ferror(puser)) {
 		printf("error: %s\n", strerror(errno));
 	}
-
 }
 
 /*SEÇÃO PACIENTES*/
@@ -672,7 +642,29 @@ void cad_paciente()
 
 void con_paciente()
 {
-	printf("teste");
+	setlocale(LC_ALL, "Portuguese"); //Para acentuação
+	char texto[255];
+	//user cpaciente;
+	ppatient = fopen("dados\\cad_paciente.txt", "r");
+
+	if (ppatient == NULL) {
+		perror("dados\\cad_paciente.txt");
+		return 1;
+	}
+	printf("Pacientes:\n\n");
+
+	while (!feof(ppatient))
+	{
+		//função gets lê string, pega do teclado, e fgets, pega do arquivo
+		fgets(texto, 255, ppatient);
+		printf("%s", texto);
+	}
+
+	fclose(ppatient);
+
+	if (ferror(ppatient)) {
+		printf("error: %s\n", strerror(errno));
+	}
 }
 
 /*SEÇÃO MEDICOS*/
@@ -740,7 +732,29 @@ void cad_medico()
 
 void con_medico()
 {
-	printf("teste");
+	setlocale(LC_ALL, "Portuguese"); //Para acentuação
+	char texto[255];
+	//user cpaciente;
+	pdoctor = fopen("dados\\cad_medico.txt", "r");
+
+	if (puser == NULL) {
+		perror("dados\\cad_medico.txt");
+		return 1;
+	}
+	printf("Medico:\n\n");
+
+	while (!feof(puser))
+	{
+		//função gets lê string, pega do teclado, e fgets, pega do arquivo
+		fgets(texto, 255, puser);
+		printf("%s", texto);
+	}
+
+	fclose(puser);
+
+	if (ferror(puser)) {
+		printf("error: %s\n", strerror(errno));
+	}
 }
 
 /*SEÇÃO FILIAL*/
@@ -822,7 +836,29 @@ void cad_filial()
 
 void con_filial()
 {
-	printf("teste");
+	setlocale(LC_ALL, "Portuguese"); //Para acentuação
+	char texto[255];
+	//user cpaciente;
+	pfilial = fopen("dados\\cad_filial.txt", "r");
+
+	if (puser == NULL) {
+		perror("dados\\cad_filial.txt");
+		return 1;
+	}
+	printf("Filial:\n\n");
+
+	while (!feof(puser))
+	{
+		//função gets lê string, pega do teclado, e fgets, pega do arquivo
+		fgets(texto, 255, puser);
+		printf("%s", texto);
+	}
+
+	fclose(puser);
+
+	if (ferror(puser)) {
+		printf("error: %s\n", strerror(errno));
+	}
 }
 
 /*SEÇÃO AGENDAMENTOS*/
@@ -837,9 +873,35 @@ void con_agendamentos()
 	printf("teste");
 }
 
-void limpabuffer(void) // Funçao utilitária para limpar o buffer do teclado
+/*RECLAMAÇÕES E ELOGIOS DOS CLIENTES*/
+
+char cad_elogiosereclamacoes()
 {
-	int c = 0;
-	while ((c = getchar()) != '\n' && c != EOF) {}
-	return;
+	setlocale(LC_ALL, "Portuguese"); //Para acentuação
+	char elogios, reclamações, sugestões;
+	int x = 1, y = 2, w = 3;
+
+
+	system("cls");
+
+	printf("\nSe deseja adicionar um elogio digite 1\n Se deseja adiciomar uma reclamação digite 2\n Se deseja adicionar uma sugestão digite 3\n");
+
+	if (x == 1)
+	{
+		scanf("%c", &elogios);
+		getchar();
+	}
+	if (y == 2)
+	{
+		scanf("%c", &reclamações);
+		getchar();
+	}
+	if (w == 3)
+	{
+		scanf("%c", &sugestões);
+		getchar();
+	};
+
+	getchar();
+	return(0);
 }
